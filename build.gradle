@@ -1,0 +1,43 @@
+plugins {
+    id "java"
+    id "idea"
+    id "org.springframework.boot" version "2.6.0"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+ext {
+    mapstructVersion = "1.4.2.Final"
+    jetbrainsAnnotationsVersion = "22.0.0"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-artemis"
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+    implementation "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+springBoot {
+    buildInfo()
+}
+
+bootJar {
+    archiveFileName = "${project.name}.jar"
+}
