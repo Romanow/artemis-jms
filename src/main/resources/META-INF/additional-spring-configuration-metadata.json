@@ -1,0 +1,15 @@
+{
+  "properties": [
+    {
+      "name": "messaging.queue-name",
+      "type": "java.lang.String",
+      "defaultValue": "my-queue",
+      "description": "Queue name."
+    },
+    {
+      "name": "messaging.message",
+      "type": "java.lang.String",
+      "description": "Message."
+    }
+  ]
+}

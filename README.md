@@ -19,12 +19,31 @@ $ docker compose up -d
 
 ## Start Java application
 
-Приложение создает очередь `my-queue` и раз в 5 секунд отправляет туда сообщения
-вида: `Hello queue world " + now().format(ISO_LOCAL_DATE_TIME)`
-
 ```shell
 $ ./gradlew clean build
 $ ./gradlew bootRun
+```
+
+По-умолчанию приложение создает очередь `my-queue` и раз в 5 секунд отправляет туда сообщения
+вида: `Hello queue world " + now().format(ISO_LOCAL_DATE_TIME)`
+
+Для задания настроек нужно в скрипт запуска передать параметры через `--args='...'`:
+
+```shell
+$ ./gradlew bootRun --args='--messaging.message="Hello, World!" --messaging.queue-name="default-queue" --broker-url=tcp://artemis:61616'
+```
+
+Все доступные настройки:
+
+```
+Simple Java application for JMS messaging in Artemis
+
+--broker-url				set broker url (default [tcp://127.0.0.1:61616])
+--broker-username			set broker url (default [admin])
+--broker-password			set broker password (default [admin])
+--messaging.queue-name		set queue name (default 'my-queue')
+--messaging.message			set message text (default 'hello, world + timestamp')
+--help						print help message
 ```
 
 ## Consume from Artemis UI
