@@ -38,12 +38,13 @@ $ ./gradlew bootRun --args='--messaging.message="Hello, World!" --messaging.queu
 ```
 Simple Java application for JMS messaging in Artemis
 
---broker-url				set broker url (default [tcp://127.0.0.1:61616])
---broker-username			set broker url (default [admin])
---broker-password			set broker password (default [admin])
---messaging.queue-name		set queue name (default 'my-queue')
---messaging.message			set message text (default 'hello, world + timestamp')
---help						print help message
+--broker-url				           set broker url (default [tcp://127.0.0.1:61616])
+--broker-username			           set broker url (default [admin])
+--broker-password			           set broker password (default [admin])
+--messaging.queue-name		           set queue name (default 'my-queue')
+--messaging.message			           set message text (default 'hello, world + timestamp')
+--messaging.properties.<key>=<value>   set properties
+--help         						   print help message
 ```
 
 ## Consume from Artemis UI

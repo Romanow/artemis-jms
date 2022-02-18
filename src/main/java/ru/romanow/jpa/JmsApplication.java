@@ -1,6 +1,7 @@
 package ru.romanow.jpa;
 
 import lombok.Data;
+import lombok.SneakyThrows;
 import org.apache.activemq.artemis.jms.client.ActiveMQQueue;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -14,11 +15,15 @@ import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 
+import javax.jms.TextMessage;
+import java.util.Map;
+
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.util.StringUtils.hasLength;
-import static ru.romanow.jpa.HelpPrinter.*;
+import static ru.romanow.jpa.HelpPrinter.HELP;
+import static ru.romanow.jpa.HelpPrinter.print;
 
 @SpringBootApplication
 @EnableConfigurationProperties(JmsApplication.MessagingProperties.class)
@@ -37,10 +42,10 @@ public class JmsApplication {
         SpringApplication.run(JmsApplication.class, args);
     }
 
-    @JmsListener(destination = "my-queue")
-    public void receiver(String content) {
-        logger.info("Incoming message from queue [{}]: [{}]", QUEUE_NAME, content);
-    }
+//    @JmsListener(destination = "my-queue")
+//    public void receiver(String content) {
+//        logger.info("Incoming message from queue [{}]: [{}]", QUEUE_NAME, content);
+//    }
 
     @Bean
     public ActiveMQQueue topic(MessagingProperties properties) {
@@ -48,12 +53,19 @@ public class JmsApplication {
     }
 
     @Bean
-    public ApplicationRunner sender(MessagingProperties properties, ActiveMQQueue queue, JmsTemplate jmsTemplate) {
+    public ApplicationRunner sender(MessagingProperties messagingProperties, ActiveMQQueue queue, JmsTemplate jmsTemplate) {
         return args -> {
             while (true) {
-                logger.info("Send message to queue [{}]", properties.queueName);
-                final String message = getMessage(properties);
-                jmsTemplate.send(queue, session -> session.createTextMessage(message));
+                logger.info("Send message to queue [{}]", messagingProperties.queueName);
+                final String text = getMessage(messagingProperties);
+                jmsTemplate.send(queue, session -> {
+                    final TextMessage message = session.createTextMessage(text);
+                    final Map<String, String> properties = messagingProperties.getProperties();
+                    if (properties != null && !properties.isEmpty()) {
+                        properties.forEach((name, value) -> setProperty(message, name, value));
+                    }
+                    return message;
+                });
                 Thread.sleep(TIMEOUT);
             }
         };
@@ -66,11 +78,17 @@ public class JmsApplication {
                 : "Hello queue world " + now().format(ISO_LOCAL_DATE_TIME);
     }
 
+    @SneakyThrows
+    private void setProperty(TextMessage msg, String name, String value) {
+        msg.setObjectProperty(name, value);
+    }
+
     @Data
     @ConfigurationProperties(prefix = "messaging")
     public static class MessagingProperties {
         private String queueName;
         private String message;
+        private Map<String, String> properties;
     }
 }
 
