@@ -15,7 +15,8 @@ $ docker compose up -d
 > Max Disk Usage
 > The System will perform scans on the disk to determine if the disk is beyond a configured limit. These are configured
 > through max-disk-usage in percentage. Once that limit is reached any message will be blocked. (unless the protocol
-> doesn't support flow control on which case there will be an exception thrown and the connection for those clients dropped).
+> doesn't support flow control on which case there will be an exception thrown and the connection for those clients
+> dropped).
 
 ## Start Java application
 
@@ -38,13 +39,13 @@ $ ./gradlew bootRun --args='--messaging.message="Hello, World!" --messaging.queu
 ```
 Simple Java application for JMS messaging in Artemis
 
---broker-url				           set broker url (default [tcp://127.0.0.1:61616])
---broker-username			           set broker url (default [admin])
---broker-password			           set broker password (default [admin])
---messaging.queue-name		           set queue name (default 'my-queue')
---messaging.message			           set message text (default 'hello, world + timestamp')
+--broker-url                           set broker url (default [tcp://127.0.0.1:61616])
+--broker-username                      set broker url (default [admin])
+--broker-password                      set broker password (default [admin])
+--messaging.queue-name                 set queue name (default 'my-queue')
+--messaging.message                    set message text (default 'hello, world + timestamp')
 --messaging.properties.<key>=<value>   set properties
---help         						   print help message
+--help                                 print help message
 ```
 
 ## Consume from Artemis UI

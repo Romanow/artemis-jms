@@ -1,18 +1,21 @@
 version: "3"
 services:
   artemis:
-    image: vromero/activemq-artemis:2.16.0
+    image: apache/activemq-artemis:2.35.0
     environment:
-      ARTEMIS_MIN_MEMORY: 1024M
-      ARTEMIS_MAX_MEMORY: 2048M
       ARTEMIS_USERNAME: admin
       ARTEMIS_PASSWORD: admin
     ports:
       - "8161:8161"
       - "61616:61616"
+    healthcheck:
+      test: [ "CMD-SHELL", "/app/artemis/bin/artemis check queue --name TEST --produce 10 --browse 10 --consume 10 --url tcp://localhost:61616 --user $$ARTEMIS_USERNAME --password $$ARTEMIS_PASSWORD" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
     volumes:
       - artemis:/var/lib/artemis
-      - ./artemis/:/var/lib/artemis/etc-override/
+      - ./docker/:/var/lib/artemis/etc-override/
 
 volumes:
   artemis:

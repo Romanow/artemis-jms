@@ -1,5 +1,6 @@
 package ru.romanow.jpa;
 
+import jakarta.jms.TextMessage;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.activemq.artemis.jms.client.ActiveMQQueue;
@@ -12,10 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 
-import javax.jms.TextMessage;
 import java.util.Map;
 
 import static java.time.LocalDateTime.now;
@@ -91,4 +90,3 @@ public class JmsApplication {
         private Map<String, String> properties;
     }
 }
-
