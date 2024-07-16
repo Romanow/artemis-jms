@@ -1,21 +1,20 @@
-version: "3"
 services:
   artemis:
     image: apache/activemq-artemis:2.35.0
     environment:
-      ARTEMIS_USERNAME: admin
-      ARTEMIS_PASSWORD: admin
+      ARTEMIS_USER: artemis
+      ARTEMIS_PASSWORD: artemis
     ports:
       - "8161:8161"
       - "61616:61616"
     healthcheck:
-      test: [ "CMD-SHELL", "/app/artemis/bin/artemis check queue --name TEST --produce 10 --browse 10 --consume 10 --url tcp://localhost:61616 --user $$ARTEMIS_USERNAME --password $$ARTEMIS_PASSWORD" ]
+      test: [ "CMD-SHELL", "/var/lib/artemis-instance/bin/artemis check queue --name TEST --produce 10 --browse 10 --consume 10 --url tcp://localhost:61616 --user $$ARTEMIS_USERNAME --password $$ARTEMIS_PASSWORD" ]
       interval: 10s
       timeout: 10s
       retries: 5
     volumes:
-      - artemis:/var/lib/artemis
-      - ./docker/:/var/lib/artemis/etc-override/
+      - artemis:/var/lib/artemis-instance
+      - ./docker/:/var/lib/artemis-instance/etc-override
 
 volumes:
   artemis:
